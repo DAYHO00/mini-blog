@@ -6,21 +6,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deaho.miniblog.auth.dto.LoginRequest;
 import com.deaho.miniblog.auth.dto.SignupRequest;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest req) {
+    public ResponseEntity<Void> signup(@RequestBody SignupRequest req) {
         authService.signup(req);
-        return ResponseEntity.ok().body("회원가입 성공");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest req) {
+        String token = authService.login(req);
+        return ResponseEntity.ok(token);
     }
 }

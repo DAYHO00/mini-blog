@@ -1,9 +1,11 @@
 package com.deaho.miniblog.auth;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.deaho.miniblog.auth.dto.LoginRequest;
 import com.deaho.miniblog.auth.dto.SignupRequest;
+import com.deaho.miniblog.security.JwtProvider;
 import com.deaho.miniblog.user.User;
 import com.deaho.miniblog.user.UserRepository;
 
@@ -14,7 +16,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     public void signup(SignupRequest req) {
         if (userRepository.existsByUsername(req.getUsername())) {
@@ -31,5 +34,17 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+    }
+
+    public String login(LoginRequest req) {
+        User user = userRepository.findByUsername(req.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
+
+        boolean ok = passwordEncoder.matches(req.getPassword(), user.getPasswordHash());
+        if (!ok) {
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        return jwtProvider.generateAccessToken(user.getUsername());
     }
 }
