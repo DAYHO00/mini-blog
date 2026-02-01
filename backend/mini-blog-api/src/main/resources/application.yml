@@ -1,4 +1,3 @@
-app:
-  jwt:
-    secret: "I3mmrJzMx+lam/AVt9h88cukETCPp05NLmO0pn5z0ucvQlwNAVC3V7/kJVuSeLuXyt5EnsJQaqePXwMer5RPOA=="
-    access-token-expiration-ms: 3600000 # 1시간
+jwt:
+  secret: "I3mmrJzMx+lam/AVt9h88cukETCPp05NLmO0pn5z0ucvQlwNAVC3V7/kJVuSeLuXyt5EnsJQaqePXwMer5RPOA=="
+  access-token-expire-ms: 3600000
