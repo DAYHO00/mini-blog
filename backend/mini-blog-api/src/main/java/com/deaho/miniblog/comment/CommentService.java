@@ -66,7 +66,7 @@ public class CommentService {
                 c.getId(),
                 c.getPost().getId(),
                 c.getContent(),
-                c.getAuthor().getEmail(),
+                c.getAuthor().getUsername(),
                 c.getCreatedAt(),
                 c.getUpdatedAt()
         );

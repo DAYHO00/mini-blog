@@ -2,6 +2,7 @@ package com.deaho.miniblog.post;
 
 import java.util.List;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,22 +23,22 @@ public class PostService {
 
     @Transactional
     public PostResponse create(PostCreateRequest req) {
-        // ✅ 실제로는 username(subject)일 가능성이 높으니 이름부터 맞추기
         String username = CurrentUserUtil.getCurrentUsername();
-        if (username == null) throw new IllegalStateException("인증 정보를 찾을 수 없습니다.");
+        if (username == null) {
+            throw new IllegalStateException("인증 정보를 찾을 수 없습니다.");
+        }
 
-        // ✅ username 기준으로 조회
         User author = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + username));
 
         Post saved = postRepository.save(new Post(req.title(), req.content(), author));
-        return toResponse(saved, author.getEmail()); // authorEmail은 그대로 email 내려줘도 OK
+        return toResponse(saved);
     }
 
     @Transactional(readOnly = true)
     public List<PostResponse> findAll() {
         return postRepository.findAll().stream()
-                .map(p -> toResponse(p, p.getAuthor().getEmail()))
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -45,15 +46,35 @@ public class PostService {
     public PostResponse findById(Long id) {
         Post p = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다: " + id));
-        return toResponse(p, p.getAuthor().getEmail());
+        return toResponse(p);
     }
 
-    private PostResponse toResponse(Post p, String authorEmail) {
+    // ✅ 추가: 게시글 삭제 (작성자만 가능)
+    @Transactional
+    public void delete(Long id) {
+        String username = CurrentUserUtil.getCurrentUsername();
+        if (username == null) {
+            throw new IllegalStateException("인증 정보를 찾을 수 없습니다.");
+        }
+
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다: " + id));
+
+        // 작성자 검증
+        String authorUsername = post.getAuthor().getUsername();
+        if (!authorUsername.equals(username)) {
+            throw new AccessDeniedException("작성자만 삭제할 수 있습니다.");
+        }
+
+        postRepository.delete(post);
+    }
+
+    private PostResponse toResponse(Post p) {
         return new PostResponse(
                 p.getId(),
                 p.getTitle(),
                 p.getContent(),
-                authorEmail,
+                p.getAuthor().getUsername(),
                 p.getCreatedAt(),
                 p.getUpdatedAt()
         );

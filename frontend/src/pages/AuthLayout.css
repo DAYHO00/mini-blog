@@ -1,0 +1,165 @@
+/* =========================
+   Layout
+========================= */
+.auth-wrap {
+  min-height: 100vh;
+  display: grid;
+
+  /* ✅ 정확히 3 : 1 (75% : 25%) */
+  grid-template-columns: 3fr 1fr;
+}
+
+/* =========================
+   Left (Brand / Image)
+========================= */
+.auth-left {
+  position: relative;
+  background: linear-gradient(135deg, #0f0f10, #3b3b3f);
+  overflow: hidden;
+}
+
+/* 은은한 질감/조명 */
+.auth-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  background:
+    radial-gradient(
+      circle at 55% 45%,
+      rgba(255, 255, 255, 0.1),
+      rgba(0, 0, 0, 0) 55%
+    ),
+    radial-gradient(
+      circle at 15% 85%,
+      rgba(255, 255, 255, 0.06),
+      rgba(0, 0, 0, 0) 60%
+    );
+}
+
+/* ✅ 브랜드 영역: 중앙 정렬 */
+.auth-brand {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center; /* 세로 중앙 */
+  justify-content: center; /* 가로 중앙 */
+  padding: 3rem;
+  color: #fff;
+  text-align: center;
+}
+
+/* ✅ “검은 영역 중앙 2/4 정도” 느낌을 주는 래퍼 */
+.auth-brand-inner {
+  width: 50%; /* ✅ 왼쪽 영역의 절반 정도 */
+  min-width: 22rem; /* 너무 작아지지 않게 */
+  max-width: 46rem; /* 너무 커지지 않게 */
+  padding-bottom: 7rem;
+}
+
+/* ✅ B.L.O.G 크게 */
+.auth-brand h1 {
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+
+  /* 화면에 따라 자동으로 커졌다 작아짐 */
+  font-size: clamp(3.2rem, 5.5vw, 6.2rem);
+}
+
+/* ✅ 서브카피는 작게 + 중앙 */
+.auth-brand p {
+  margin-top: 1rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.25rem);
+  line-height: 1.6;
+  opacity: 0.86;
+}
+
+/* =========================
+   Right (Login / Signup)
+========================= */
+.auth-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 22rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.auth-input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.625rem;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: #111;
+}
+
+.auth-btn {
+  padding: 0.75rem;
+  border-radius: 0.625rem;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.auth-btn-primary {
+  background: #111;
+  color: #fff;
+  transition: opacity 0.2s ease;
+}
+
+.auth-btn-primary:hover {
+  opacity: 0.85;
+}
+
+.auth-link {
+  font-size: 0.875rem;
+}
+
+.auth-error {
+  font-size: 0.875rem;
+  color: #d00;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 1100px) {
+  /* 노트북에서 브랜드가 너무 좁아지면 50% -> 60%로 살짝 확장 */
+  .auth-brand-inner {
+    width: 60%;
+  }
+}
+
+@media (max-width: 900px) {
+  .auth-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-left {
+    display: none;
+  }
+
+  .auth-right {
+    padding: 2.5rem 1.5rem;
+  }
+}

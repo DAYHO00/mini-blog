@@ -6,7 +6,7 @@ public record PostResponse(
         Long id,
         String title,
         String content,
-        String authorEmail,
+        String authorUsername,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

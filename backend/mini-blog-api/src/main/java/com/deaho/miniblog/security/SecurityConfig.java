@@ -25,11 +25,9 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwtProvider);
     }
 
-    // ✅ 이 체인이 항상 먼저 적용되게
     @Bean
     @Order(1)
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
-         System.out.println("### SecurityFilterChain LOADED ###");
         http
             .securityMatcher("/**")
             .csrf(csrf -> csrf.disable())
@@ -44,14 +42,26 @@ public class SecurityConfig {
             )
 
             .authorizeHttpRequests(auth -> auth
+                // swagger / actuator / auth
                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // ✅ 게시글 조회는 공개 (원하면 authenticated로 바꿔도 됨)
+                .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+
+                // ✅ 좋아요 관련은 인증 필요 (지금 Swagger에 자물쇠가 있으니 이게 자연스러움)
+                .requestMatchers("/api/v1/posts/*/likes/**").authenticated()
+
+                // ✅ 글 작성/삭제는 인증 필요
+                .requestMatchers(HttpMethod.POST, "/api/v1/posts/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/posts/**").authenticated()
+
+                // 나머지는 일단 인증 필요
                 .anyRequest().authenticated()
             )
 
-            // ✅ Bean으로 만든 jwtFilter를 확정으로 삽입
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

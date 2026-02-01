@@ -6,7 +6,7 @@ public record CommentResponse(
         Long id,
         Long postId,
         String content,
-        String authorEmail,
+        String username,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}
