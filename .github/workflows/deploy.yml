@@ -16,20 +16,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-
             cd /home/ubuntu/mini-blog
 
-            # 최신 코드 반영
             git fetch --all
             git reset --hard origin/main
 
             cd infra
-
-            # ✅ 운영(prod) compose로 최신 이미지 내려받기
             docker compose -f docker-compose.prod.yml pull
-
-            # ✅ 항상 최신 이미지로 컨테이너 교체
             docker compose -f docker-compose.prod.yml up -d --force-recreate
-
-            # 상태 출력
             docker compose -f docker-compose.prod.yml ps
