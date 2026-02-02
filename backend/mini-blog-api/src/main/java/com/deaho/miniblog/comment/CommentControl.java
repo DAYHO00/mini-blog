@@ -1,11 +1,19 @@
 package com.deaho.miniblog.comment;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.deaho.miniblog.comment.dto.CommentCreateRequest;
 import com.deaho.miniblog.comment.dto.CommentResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
@@ -14,7 +22,7 @@ public class CommentControl {
 
     private final CommentService commentService;
 
-    // ?Œ“ê¸? ?ƒ?„±
+  
     @PostMapping("/posts/{postId}/comments")
     public CommentResponse create(
             @PathVariable Long postId,
@@ -27,20 +35,18 @@ public class CommentControl {
         return commentService.create(postId, req);
     }
 
-    // ?Š¹? • ê²Œì‹œê¸??˜ ?Œ“ê¸? ëª©ë¡ ì¡°íšŒ
+   
     @GetMapping("/posts/{postId}/comments")
     public List<CommentResponse> findByPost(@PathVariable Long postId) {
-        System.out.println("?Ÿ“? [CommentController] ?Œ“ê¸? ëª©ë¡ ì¡°íšŒ");
-        System.out.println("?Ÿ“? postId = " + postId);
+
 
         return commentService.findByPost(postId);
     }
 
-    // ?Œ“ê¸? ?‚­? œ
+    // ?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½
     @DeleteMapping("/comments/{commentId}")
     public void delete(@PathVariable Long commentId) {
-        System.out.println("?Ÿ—‘ï¸ [CommentController] ?Œ“ê¸? ?‚­? œ ?š”ì²?");
-        System.out.println("?Ÿ—‘ï¸ commentId = " + commentId);
+
 
         commentService.delete(commentId);
     }
