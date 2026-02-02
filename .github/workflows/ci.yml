@@ -11,6 +11,28 @@ jobs:
     name: Backend - Gradle test
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: miniblog
+          POSTGRES_USER: mini
+          POSTGRES_PASSWORD: mini1234
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U mini -d miniblog"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/miniblog
+      SPRING_DATASOURCE_USERNAME: mini
+      SPRING_DATASOURCE_PASSWORD: mini1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+
     defaults:
       run:
         working-directory: backend/mini-blog-api
@@ -26,11 +48,8 @@ jobs:
           java-version: "17"
           cache: gradle
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
       - name: Run tests
-        run: ./gradlew test --stacktrace --info
+        run: ./gradlew test --stacktrace
 
   frontend:
     name: Frontend - build
