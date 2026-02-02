@@ -25,11 +25,11 @@ jobs:
 
             cd infra
 
-            # ✅ 운영(prod) compose로 최신 이미지 내려받기
-            docker compose -f docker-compose.prod.yml pull
+            # ✅ 최신 이미지 내려받기
+            docker compose pull
 
-            # ✅ 항상 최신 이미지로 컨테이너 교체
-            docker compose -f docker-compose.prod.yml up -d --force-recreate
+            # ✅ 컨테이너 강제 재생성 (항상 최신 이미지로 갈아끼움)
+            docker compose up -d --force-recreate
 
             # 상태 출력
-            docker compose -f docker-compose.prod.yml ps
+            docker compose ps
