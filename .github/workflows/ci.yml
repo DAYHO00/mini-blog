@@ -30,8 +30,6 @@ jobs:
       SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/miniblog
       SPRING_DATASOURCE_USERNAME: mini
       SPRING_DATASOURCE_PASSWORD: mini1234
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
 
     defaults:
       run:
@@ -48,8 +46,14 @@ jobs:
           java-version: "17"
           cache: gradle
 
+      - name: Make gradlew executable
+        run: |
+          ls -al
+          chmod +x ./gradlew
+
       - name: Run tests
-        run: ./gradlew test --stacktrace
+        run: |
+          ./gradlew test --stacktrace
 
   frontend:
     name: Frontend - build
