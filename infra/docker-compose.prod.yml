@@ -1,35 +1,38 @@
-name: CD
+services:
+  db:
+    image: postgres:16
+    container_name: mini-blog-db
+    environment:
+      POSTGRES_DB: miniblog
+      POSTGRES_USER: miniblog
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
 
-on:
-  workflow_dispatch:
+  backend:
+    image: ghcr.io/dayho00/mini-blog-api:latest
+    container_name: mini-blog-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: miniblog
+      DB_USER: miniblog
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - db
+    restart: always
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  frontend:
+    image: ghcr.io/dayho00/mini-blog-web:latest
+    container_name: mini-blog-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
 
-    steps:
-      - name: Deploy via SSH to EC2
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            set -e
-
-            cd /home/ubuntu/mini-blog
-
-            # 최신 코드 반영
-            git fetch --all
-            git reset --hard origin/main
-
-            cd infra
-
-            # ✅ 최신 이미지 내려받기
-            docker compose pull
-
-            # ✅ 컨테이너 강제 재생성 (항상 최신 이미지로 갈아끼움)
-            docker compose up -d --force-recreate
-
-            # 상태 출력
-            docker compose ps
+volumes:
+  db_data:
