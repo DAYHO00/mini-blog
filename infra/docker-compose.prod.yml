@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:16
     container_name: mini-blog-db
+    networks:
+      - mini-blog-net
     environment:
       POSTGRES_DB: miniblog
       POSTGRES_USER: miniblog
@@ -13,9 +15,11 @@ services:
   backend:
     image: ghcr.io/dayho00/mini-blog-api:latest
     container_name: mini-blog-backend
+    networks:
+      - mini-blog-net
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_HOST: db
+      DB_HOST: mini-blog-db
       DB_PORT: 5432
       DB_NAME: miniblog
       DB_USER: miniblog
@@ -28,11 +32,17 @@ services:
   frontend:
     image: ghcr.io/dayho00/mini-blog-web:latest
     container_name: mini-blog-frontend
+    networks:
+      - mini-blog-net
     ports:
       - "80:80"
     depends_on:
       - backend
     restart: always
+
+networks:
+  mini-blog-net:
+    driver: bridge
 
 volumes:
   db_data:
