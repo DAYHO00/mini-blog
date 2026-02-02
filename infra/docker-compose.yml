@@ -24,7 +24,10 @@ services:
       - db
 
   web:
-    image: ghcr.io/dayho00/mini-blog-web:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    image: mini-blog-web:local
     container_name: mini-blog-web
     ports:
       - "80:80"
