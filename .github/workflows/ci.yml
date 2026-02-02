@@ -1,15 +1,19 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches: ["main"]
+  pull_request:
   workflow_dispatch:
 
 jobs:
   backend:
-    name: Backend - Gradle test
+    name: Backend - Test & Docker Build
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     services:
       postgres:
@@ -36,8 +40,7 @@ jobs:
         working-directory: backend/mini-blog-api
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -47,25 +50,39 @@ jobs:
           cache: gradle
 
       - name: Make gradlew executable
-        run: |
-          ls -al
-          chmod +x ./gradlew
+        run: chmod +x ./gradlew
 
       - name: Run tests
-        run: |
-          ./gradlew test --stacktrace
+        run: ./gradlew test
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: backend/mini-blog-api
+          push: true
+          tags: ghcr.io/dayho00/mini-blog-api:latest
 
   frontend:
-    name: Frontend - build
+    name: Frontend - Build & Docker
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     defaults:
       run:
         working-directory: frontend
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Node 20
         uses: actions/setup-node@v4
@@ -79,3 +96,17 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: frontend
+          push: true
+          tags: ghcr.io/dayho00/mini-blog-web:latest
