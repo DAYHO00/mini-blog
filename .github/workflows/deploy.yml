@@ -1,15 +1,14 @@
-name: Deploy to EC2 (Manual)
+name: CD - Deploy to EC2 (manual)
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy via SSH
+      - name: Deploy via SSH to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -18,15 +17,12 @@ jobs:
           script: |
             set -e
 
-            # 1) 서버의 레포 폴더로 이동
             cd /home/ubuntu/mini-blog
 
-            # 2) 최신 코드 반영
             git fetch --all
             git reset --hard origin/main
 
-            # 3) docker compose 실행 (compose 파일 있는 곳으로 이동)
             cd infra
-
             docker compose up -d --build
+
             docker compose ps
