@@ -11,5 +11,27 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql/data
 
+  api:
+    build:
+      context: ../backend/mini-blog-api
+    container_name: mini-blog-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/miniblog
+      SPRING_DATASOURCE_USERNAME: mini
+      SPRING_DATASOURCE_PASSWORD: mini1234
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ../frontend
+    container_name: mini-blog-web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
 volumes:
   dbdata:

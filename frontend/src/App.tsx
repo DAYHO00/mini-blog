@@ -6,16 +6,11 @@ import WritePost from "./pages/Write";
 import PrivateRoute from "./routes/PrivateRoute";
 
 export default function App() {
-  const token = localStorage.getItem("accessToken");
-
   return (
     <BrowserRouter>
       <Routes>
-        {/* ✅ 로그인 상태면 /feed, 아니면 /login */}
-        <Route
-          path="/"
-          element={<Navigate to={token ? "/feed" : "/login"} replace />}
-        />
+        {/* ✅ 루트는 무조건 로그인 */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -37,6 +32,9 @@ export default function App() {
             </PrivateRoute>
           }
         />
+
+        {/* ✅ 나머지는 루트로 */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
