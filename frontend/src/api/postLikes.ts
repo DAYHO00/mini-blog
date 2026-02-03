@@ -12,7 +12,7 @@ export async function likePost(postId: number): Promise<LikeResponse> {
 }
 
 export async function unlikePost(postId: number): Promise<LikeResponse> {
-  console.log("Signup successful");
+  console.log("Signup sucessful");
   const res = await api.delete(`/v1/posts/${postId}/likes`);
   return res.data;
 }

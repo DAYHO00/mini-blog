@@ -10,4 +10,5 @@ export async function login(req: LoginReq): Promise<string> {
 
 export async function signup(req: SignupReq): Promise<void> {
   await api.post("/v1/auth/signup", req);
+  console.log("Signup successful");
 }

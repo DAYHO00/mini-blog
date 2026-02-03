@@ -14,7 +14,7 @@ export type CreatePostRequest = {
 };
 
 export async function getPosts(): Promise<PostItem[]> {
-  console.log("Signup successful");
+  console.log("Signup succesful");
   const res = await api.get<PostItem[]>("/v1/posts");
   return res.data;
 }
