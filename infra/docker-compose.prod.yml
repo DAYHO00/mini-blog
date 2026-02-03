@@ -14,7 +14,7 @@ services:
 
   backend:
     image: ghcr.io/dayho00/mini-blog-api:latest
-    container_name: mini-blog-backend
+    container_name: mini-blog-api # ✅ 기존 컨테이너 이름과 통일
     networks:
       - mini-blog-net
     environment:
@@ -29,9 +29,9 @@ services:
       - db
     restart: always
 
-  frontend:
+  web:
     image: mini-blog-web:local
-    container_name: mini-blog-frontend
+    container_name: mini-blog-web # ✅ 기존 80포트 컨테이너
     networks:
       - mini-blog-net
     ports:
