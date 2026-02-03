@@ -43,27 +43,27 @@ JWT 기반 인증과 게시글·댓글·좋아요 기능을 갖춘
 ## 🛠 기술 스택
 
 ### Frontend
-Framework: React
-Language: TypeScript
-Build Tool: Vite
-Routing: react-router-dom
-HTTP Client: Axios
+- Framework: React
+- Language: TypeScript
+- Build Tool: Vite
+- Routing: react-router-dom
+- HTTP Client: Axios
 
 ### Backend
-Framework: Spring Boot 3.x
-Language: Java 17
-Security: Spring Security + JWT
-ORM: JPA / Hibernate
-API Docs: Swagger (OpenAPI)
+- Framework: Spring Boot 3.x
+- Language: Java 17
+- Security: Spring Security + JWT
+- ORM: JPA / Hibernate
+- API Docs: Swagger (OpenAPI)
 
 ### Database
-Database: PostgreSQL 16
+- Database: PostgreSQL 16
 
 ### Infrastructure
-Containerization: Docker / Docker Compose
-Cloud: AWS EC2 (Production)
-CI/CD: GitHub Actions
-Image Registry: GHCR
+- Containerization: Docker / Docker Compose
+- Cloud: AWS EC2 (Production)
+- CI/CD: GitHub Actions
+- Image Registry: GHCR
 
 ---
 
@@ -85,19 +85,19 @@ docker compose up -d --build
 ---
 
 ### 💡 핵심 기능
-- 1. JWT 인증 흐름
-로그인 시 JWT 발급
-Authorization 헤더에 토큰 포함
-필터 기반 인증 처리
+**1. JWT 인증 흐름**
+- 로그인 시 JWT 발급
+- Authorization 헤더에 토큰 포함
+- 필터 기반 인증 처리
 
-- 2. 게시글 / 댓글 / 좋아요 API
-RESTful API 설계
-인증/비인증 요청 분리
-작성자 권한 기반 삭제 처리
+**2. 게시글 / 댓글 / 좋아요 API**
+- RESTful API 설계
+- 인증/비인증 요청 분리
+- 작성자 권한 기반 삭제 처리
 
-- 3. Docker 기반 통합 구성
-Frontend / Backend / DB를 Docker Compose로 묶어서 실행
-로컬/운영 환경 모두 동일한 실행 방식 유지
+**3. Docker 기반 통합 구성**
+- Frontend / Backend / DB를 Docker Compose로 묶어서 실행
+- 로컬/운영 환경 모두 동일한 실행 방식 유지
 
 ---
 
