@@ -54,6 +54,8 @@ jobs:
 
       - name: Run tests
         run: ./gradlew test
+        env:
+          JWT_SECRET: ci_test_jwt_secret_only_for_test_123456
 
       - name: Login to GHCR
         uses: docker/login-action@v3
@@ -68,45 +70,3 @@ jobs:
           context: backend/mini-blog-api
           push: true
           tags: ghcr.io/dayho00/mini-blog-api:latest
-
-  frontend:
-    name: Frontend - Build & Docker
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: write
-
-    defaults:
-      run:
-        working-directory: frontend
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build & Push Frontend Image
-        uses: docker/build-push-action@v5
-        with:
-          context: frontend
-          push: true
-          tags: ghcr.io/dayho00/mini-blog-web:latest
