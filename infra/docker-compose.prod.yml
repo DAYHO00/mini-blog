@@ -14,12 +14,12 @@ services:
 
   backend:
     image: ghcr.io/dayho00/mini-blog-api:latest
-    container_name: mini-blog-api # ✅ 기존 컨테이너 이름과 통일
+    container_name: mini-blog-api
     networks:
       - mini-blog-net
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_HOST: mini-blog-db
+      DB_HOST: mini-blog-db # ⭐ 핵심
       DB_PORT: 5432
       DB_NAME: miniblog
       DB_USER: miniblog
@@ -31,7 +31,7 @@ services:
 
   web:
     image: mini-blog-web:local
-    container_name: mini-blog-web # ✅ 기존 80포트 컨테이너
+    container_name: mini-blog-web
     networks:
       - mini-blog-net
     ports:
