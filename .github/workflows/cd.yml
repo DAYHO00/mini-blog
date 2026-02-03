@@ -36,13 +36,10 @@ jobs:
             echo "▶ Pull latest backend image"
             docker compose -f docker-compose.prod.yml pull backend
 
-            echo "▶ Stop backend container"
-            docker compose -f docker-compose.prod.yml stop backend || true
+            echo "▶ Force remove existing backend container (name-based)"
+            docker rm -f mini-blog-api || true
 
-            echo "▶ Remove backend container"
-            docker compose -f docker-compose.prod.yml rm -f backend || true
-
-            echo "▶ Start backend with new image"
+            echo "▶ Start backend container"
             docker compose -f docker-compose.prod.yml up -d backend
 
             echo "▶ Current container status"
