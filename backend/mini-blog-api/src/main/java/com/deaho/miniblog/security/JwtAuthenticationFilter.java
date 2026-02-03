@@ -14,7 +14,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
@@ -29,7 +28,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("[JWT FILTER] HIT {} {}", request.getMethod(), request.getRequestURI());
+        String path = request.getRequestURI();
+
+        // ✅ 토큰이 "없어도 되는" 요청은 JWT 검사 자체를 스킵
+        // (로그인/회원가입/스웨거/액추에이터 등)
+        if (path.startsWith("/api/v1/auth/")
+            || path.equals("/api/v1/auth")
+            || path.startsWith("/swagger-ui")
+            || path.startsWith("/v3/api-docs")
+            || path.startsWith("/actuator")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        log.info("[JWT FILTER] HIT {} {}", request.getMethod(), path);
 
         String authHeader = request.getHeader("Authorization");
         log.info("[JWT FILTER] Authorization header = {}", authHeader);
