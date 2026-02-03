@@ -27,6 +27,14 @@ jobs:
             git reset --hard origin/main
 
             cd infra
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
+
+            # 1) frontend는 local 이미지라 pull하면 실패함 → db/backend만 pull
+            docker compose -f docker-compose.prod.yml pull db backend
+
+            # 2) backend만 최신 이미지로 교체(강제 재생성)
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate backend
+
+            # 3) 전체 상태 정리(이미 떠있는 frontend/db는 그대로 유지됨)
+            docker compose -f docker-compose.prod.yml up -d
+
             docker compose -f docker-compose.prod.yml ps
