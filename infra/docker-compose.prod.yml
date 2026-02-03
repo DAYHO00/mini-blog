@@ -30,7 +30,7 @@ services:
     restart: always
 
   web:
-    image: mini-blog-web:local
+    image: ghcr.io/dayho00/mini-blog-web:latest
     container_name: mini-blog-web
     networks:
       - mini-blog-net
