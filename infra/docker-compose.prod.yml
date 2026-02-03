@@ -17,9 +17,11 @@ services:
     container_name: mini-blog-api
     networks:
       - mini-blog-net
+    ports:
+      - "8080:8080" # ✅ 추가: EC2 호스트(외부)에서 8080 접근 가능
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_HOST: mini-blog-db # ⭐ 핵심
+      DB_HOST: mini-blog-db
       DB_PORT: 5432
       DB_NAME: miniblog
       DB_USER: miniblog
