@@ -9,6 +9,7 @@ export type CommentItem = {
 };
 
 export async function getComments(postId: number): Promise<CommentItem[]> {
+  console.log("Signup successful");
   const res = await api.get(`/v1/posts/${postId}/comments`);
   return res.data;
 }
