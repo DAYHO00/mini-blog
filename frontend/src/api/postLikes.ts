@@ -7,23 +7,21 @@ export type LikeResponse = {
 };
 
 export async function likePost(postId: number): Promise<LikeResponse> {
-  const res = await api.post(`/api/v1/posts/${postId}/likes`);
+  const res = await api.post(`/v1/posts/${postId}/likes`);
   return res.data;
 }
 
 export async function unlikePost(postId: number): Promise<LikeResponse> {
-  const res = await api.delete(`/api/v1/posts/${postId}/likes`);
+  const res = await api.delete(`/v1/posts/${postId}/likes`);
   return res.data;
 }
 
 export async function getLikeCount(postId: number): Promise<number> {
-  const res = await api.get(`/api/v1/posts/${postId}/likes/count`);
-  // { postId, likeCount }
+  const res = await api.get(`/v1/posts/${postId}/likes/count`);
   return res.data.likeCount;
 }
 
 export async function getMyLike(postId: number): Promise<boolean> {
-  const res = await api.get(`/api/v1/posts/${postId}/likes/me`);
-  // { postId, liked }
+  const res = await api.get(`/v1/posts/${postId}/likes/me`);
   return res.data.liked;
 }
